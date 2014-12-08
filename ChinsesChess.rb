@@ -91,7 +91,14 @@ class Game
 
 	def check_che(from,to)
 		if from[0] == to[0]
-			if @board.gird[from[0]][from[1]+1]
+			if @board.gird[from[0]][from[1]+1] == @board.grid[to[0]][to[1]-1]
+				return eat(from,to) 
+			else
+				@board.gird[from[0]][(from[1]+1)..(to[1]-1)].each do |n|
+					return false if n.value != "-"
+				end
+				return eat(from,to)
+			end
 		elsif from[1] == to[1]
 
 		end
