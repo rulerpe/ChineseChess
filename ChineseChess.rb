@@ -8,7 +8,7 @@ end
 class Board
 	attr_accessor :gird
 	def initialize
-		@grid = default_gird
+		@gird = default_gird
 		setup
 	end
 
@@ -18,26 +18,26 @@ class Board
 
 	def setup
 		bottom = ["C","M","X","S","J","S","X","M","C"]	
-		@grid.each_index do |x|
-			@grid[x][0].value = bottom[x]
-			@grid[x][9].value = bottom[x].downcase
+		@gird.each_index do |x|
+			@gird[x][0].value = bottom[x]
+			@gird[x][9].value = bottom[x].downcase
 			if [0,2,4,6,8].include?(x)
-				@grid[x][3].value = "B"
-				@grid[x][6].value = "b"
+				@gird[x][3].value = "B"
+				@gird[x][6].value = "b"
 			end
 		end
-		@grid[1][2].value ="P"
-		@grid[7][2].value ="P"
+		@gird[1][2].value ="P"
+		@gird[7][2].value ="P"
 
-		@grid[1][7].value ="p"
-		@grid[7][7].value ="p"
+		@gird[1][7].value ="p"
+		@gird[7][7].value ="p"
 	end
 
 	def display
 		puts "1 2 3 4 5 6 7 8 9"
-		@grid[0].each_index do |y|
-			@grid.each_index do |x|
-				print @grid[x][y].value + " "
+		@gird[0].each_index do |y|
+			@gird.each_index do |x|
+				print @gird[x][y].value + " "
 			end
 			puts ""
 		end
@@ -55,21 +55,21 @@ end
 class Game
 	attr_accessor :player1, :player2, :board
 	def initialize (player1,player2)
-		@player1 = Player.new("X", player1)
-		@player2 = Player.new("O", player2)
+		@player1 = Player.new("up", player1)
+		@player2 = Player.new("down", player2)
 		@board = Board.new
 	end
 
 	def move(from,to)
 		if check(from,to)
-			@board.gird[to[0]][to[1]].value = @board.grid[from[0]][from[1]].value
-			@board.grid[from[0]][from[1]].value = "-"
+			@board.gird[to[0]][to[1]].value = @board.gird[from[0]][from[1]].value
+			@board.gird[from[0]][from[1]].value = "-"
 		end
 	end
 
 	def check(from,to)
 		result = false
-		case @board.grid[from[0]][from[1]].value
+		case @board.gird[from[0]][from[1]].value
 		when "c"||"C"
 			result = true if check_che(from, to)
 		when "m"||"M"
@@ -91,7 +91,10 @@ class Game
 
 	def check_che(from,to)
 		if from[0] == to[0]
-			if @board.gird[from[0]][from[1]+1] == @board.grid[to[0]][to[1]-1]
+			if from[1]>to[1]
+				from[1],to[1] = to[1], from[1]
+			end
+			if @board.gird[from[0]][from[1]+1] == @board.gird[to[0]][to[1]-1]
 				return eat(from,to) 
 			else
 				@board.gird[from[0]][(from[1]+1)..(to[1]-1)].each do |n|
@@ -100,7 +103,37 @@ class Game
 				return eat(from,to)
 			end
 		elsif from[1] == to[1]
+			if from[0]>to[0]
+				from[0],to[0] = to[0], from[0]
+			end
+			if @board.gird[from[0]+1][from[1]] == @board.gird[to[0]-1][to[1]]
+				return eat(from,to) 
+			else
+				@board.gird[(from[0]+1)..(to[0]-1)].each do |n|
+					return false if n[from[1]].value != "-"
+				end
+				return eat(from,to)
+			end
+		end
+	end
 
+	def check_ma(from,to)
+		
+	end
+
+	def eat(from,to)
+		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+			if @board.gird[to[0]][to[1]].value.downcase == @board.gird[to[0]][to[1]].value
+				return false
+			else
+				return true
+			end
+		else
+			if @board.gird[to[0]][to[1]].value.upcase == @board.gird[to[0]][to[1]].value
+				return false
+			else
+				return true
+			end
 		end
 	end
 
