@@ -114,11 +114,28 @@ class Game
 				end
 				return eat(from,to)
 			end
+		else
+			return false
 		end
 	end
 
 	def check_ma(from,to)
-		
+	    #jump0 is how many x will move
+	    #jump1 is how many y will move
+	    #jump2 is nearest x
+	    #jump3 is nearest y
+		jump = [[-1,-2,0,-1],[1,-2,0,-1], 
+			    [2,-1,1,0],[2,1,1,0],
+			    [-1,2,0,1],[1,2,0,1],
+			    [-2,-1,-1,0],[-2,1,-1,0]]
+		jump.each do |n|
+			#if @board.gird[from[0]+n[2]][from[1]+n[3]].value == "-"
+				if @board.gird[from[0]+n[0]][from[1]+n[1]].value == @board.gird[to[0]][to[1]].value
+					p n
+				end
+		#	end
+		end
+		return false
 	end
 
 	def eat(from,to)

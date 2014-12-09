@@ -20,20 +20,30 @@ describe Game do
 			@test_game.board.gird[7][0].value = "-"
 			@test_game.board.gird[6][0].value = "x"
 		end
-		it "return false, bin in between" do 
+		it "return false, bin in between (ver)" do 
 			expect(@test_game.check_che([0,0],[0,6])).to eql(false)
 		end
 
-		it "return ture, nothing inbetween" do
+		it "return ture, nothing inbetween (ver)" do
 			expect(@test_game.check_che([8,6],[8,0])).to eql(true)
 		end
 
-		it "return false, bin in between" do 
+		it "return false, bin in between (hor)" do 
 			expect(@test_game.check_che([0,0],[2,0])).to eql(false)
 		end
 
-		it "return ture, nothing inbetween" do
+		it "return ture, nothing inbetween(hor)" do
 			expect(@test_game.check_che([8,0],[6,0])).to eql(true)
+		end
+
+	end
+
+	describe "#check_ma" do
+		it "return false, something in between" do
+			expect(@test_game.check_ma([1,0],[3,1])).to eql(false)
+		end
+		it "return ture, nothing in between " do
+			expect(@test_game.check_ma([1,9],[0,7])).to eql(true)
 		end
 
 	end
