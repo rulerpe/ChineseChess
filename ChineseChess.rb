@@ -120,22 +120,22 @@ class Game
 	end
 
 	def check_ma(from,to)
-		case [to[0]][to[1]]
-		when [from[0]-1][from[1]-2]
+		case to
+		when [from[0]-1,from[1]-2]
 			@board.gird[from[0]][from[1]-1].value == "-" ? eat(from,to) : false
-		when [from[0]+1][from[1]-2]
+		when [from[0]+1,from[1]-2]
 			@board.gird[from[0]][from[1]-1].value == "-" ? eat(from,to) : false
-		when [from[0]+2][from[1]-1]
+		when [from[0]+2,from[1]-1]
 			@board.gird[from[0]+1][from[1]].value == "-" ? eat(from,to) : false
-		when [from[0]+2][from[1]+1] 
+		when [from[0]+2,from[1]+1] 
 			@board.gird[from[0]+1][from[1]].value == "-" ? eat(from,to) : false
-		when [from[0]+1][from[1]+2]
+		when [from[0]+1,from[1]+2]
 			@board.gird[from[0]][from[1]+1].value == "-" ? eat(from,to) : false
-		when [from[0]-1][from[1]+2]
+		when [from[0]-1,from[1]+2]
 			@board.gird[from[0]][from[1]+1].value == "-" ? eat(from,to) : false
-		when [from[0]-2][from[1]-1]
+		when [from[0]-2,from[1]-1]
 			@board.gird[from[0]-1][from[1]].value == "-" ? eat(from,to) : false
-		when [from[0]-1][from[1]+1]
+		when [from[0]-1,from[1]+1]
 			@board.gird[from[0]-1][from[1]].value == "-" ? eat(from,to) : false
 		else
 			return false
@@ -148,18 +148,54 @@ class Game
 		else
 			return false if to[1]>4
 		end
- 		case [to[0]][to[1]]
- 		when [from[0]-2][from[1]-2]
- 			@board.gird[from[0]-1][from[1]-1].value == "-" ? eat(from,to) : true
- 		when [from[0]+2][from[1]-2]
+ 		case to
+ 		when [from[0]-2,from[1]-2]
+ 			@board.gird[from[0]-1][from[1]-1].value == "-" ? eat(from,to) : false
+ 		when [from[0]+2,from[1]-2]
  			@board.gird[from[0]+1][from[1]-1].value == "-" ? eat(from,to) : false
- 		when [from[0]+2][from[1]+2]
+ 		when [from[0]+2,from[1]+2]
  			@board.gird[from[0]+1][from[1]+1].value == "-" ? eat(from,to) : false
- 		when [from[0]-2][from[1]+2]
+ 		when [from[0]-2,from[1]+2]
  			@board.gird[from[0]-1][from[1]+1].value == "-" ? eat(from,to) : false
  		else
  			return false
  		end
+	end
+
+	def check_shi(from,to)
+		if 5<to[0] || to[0]<3
+			return false
+		end
+		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+			return false if to[1]<7
+		else
+			return false if to[1]>2
+		end
+
+		if (from[0]-to[0]).abs == 1 && (from[1]-to[1]).abs == 1
+			return eat(from,to)
+		else
+			return false
+		end
+
+	end
+
+	def check_jiang(from,to)
+		if 5<to[0] || to[0]<3
+			return false
+		end
+		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+			return true if to[1]<7
+		else
+			return true if to[1]>2
+		end
+
+		if (from[0]-to[0]).abs + (from[1]-to[1]).abs == 1
+			return eat(from,to)
+		else
+			return false
+		end
+
 	end
 
 	def eat(from,to)
