@@ -120,26 +120,52 @@ class Game
 	end
 
 	def check_ma(from,to)
-	    #jump0 is how many x will move
-	    #jump1 is how many y will move
-	    #jump2 is nearest x
-	    #jump3 is nearest y
-		jump = [[-1,-2,0,-1],[1,-2,0,-1], 
-			    [2,-1,1,0],[2,1,1,0],
-			    [-1,2,0,1],[1,2,0,1],
-			    [-2,-1,-1,0],[-2,1,-1,0]]
-		jump.each do |n|
-			#if @board.gird[from[0]+n[2]][from[1]+n[3]].value == "-"
-				if @board.gird[from[0]+n[0]][from[1]+n[1]].value == @board.gird[to[0]][to[1]].value
-					p n
-				end
-		#	end
+		case [to[0]][to[1]]
+		when [from[0]-1][from[1]-2]
+			@board.gird[from[0]][from[1]-1].value == "-" ? eat(from,to) : false
+		when [from[0]+1][from[1]-2]
+			@board.gird[from[0]][from[1]-1].value == "-" ? eat(from,to) : false
+		when [from[0]+2][from[1]-1]
+			@board.gird[from[0]+1][from[1]].value == "-" ? eat(from,to) : false
+		when [from[0]+2][from[1]+1] 
+			@board.gird[from[0]+1][from[1]].value == "-" ? eat(from,to) : false
+		when [from[0]+1][from[1]+2]
+			@board.gird[from[0]][from[1]+1].value == "-" ? eat(from,to) : false
+		when [from[0]-1][from[1]+2]
+			@board.gird[from[0]][from[1]+1].value == "-" ? eat(from,to) : false
+		when [from[0]-2][from[1]-1]
+			@board.gird[from[0]-1][from[1]].value == "-" ? eat(from,to) : false
+		when [from[0]-1][from[1]+1]
+			@board.gird[from[0]-1][from[1]].value == "-" ? eat(from,to) : false
+		else
+			return false
 		end
-		return false
+	end
+
+	def check_xiang(from,to)
+		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+			return false if to[1]<5
+		else
+			return false if to[1]>4
+		end
+ 		case [to[0]][to[1]]
+ 		when [from[0]-2][from[1]-2]
+ 			@board.gird[from[0]-1][from[1]-1].value == "-" ? eat(from,to) : true
+ 		when [from[0]+2][from[1]-2]
+ 			@board.gird[from[0]+1][from[1]-1].value == "-" ? eat(from,to) : false
+ 		when [from[0]+2][from[1]+2]
+ 			@board.gird[from[0]+1][from[1]+1].value == "-" ? eat(from,to) : false
+ 		when [from[0]-2][from[1]+2]
+ 			@board.gird[from[0]-1][from[1]+1].value == "-" ? eat(from,to) : false
+ 		else
+ 			return false
+ 		end
 	end
 
 	def eat(from,to)
-		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+		if @board.gird[to[0]][to[1]].value == "-"
+			return true
+		elsif @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
 			if @board.gird[to[0]][to[1]].value.downcase == @board.gird[to[0]][to[1]].value
 				return false
 			else

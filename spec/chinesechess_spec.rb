@@ -48,4 +48,10 @@ describe Game do
 
 	end
 
+	describe "#check_xiang" do
+		it "rerurn ture nothing in between" do
+			expect(@test_game.check_xiang([2,0],[0,2])).to eql(true)
+		end
+	end
+
 end
