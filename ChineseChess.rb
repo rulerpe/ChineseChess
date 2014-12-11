@@ -34,12 +34,15 @@ class Board
 	end
 
 	def display
-		puts "1 2 3 4 5 6 7 8 9"
+		i = 0
+		puts "  0 1 2 3 4 5 6 7 8"
 		@gird[0].each_index do |y|
+			print "#{i} "
 			@gird.each_index do |x|
 				print @gird[x][y].value + " "
 			end
 			puts ""
+			i+=1
 		end
 	end
 end
@@ -58,6 +61,48 @@ class Game
 		@player1 = Player.new("up", player1)
 		@player2 = Player.new("down", player2)
 		@board = Board.new
+	end
+
+	def play
+		curr_player = @player2
+		@board.display
+		while won(curr_player)
+			if curr_player == @player1
+				curr_player = @player2
+			else
+				curr_player = @player1
+			end
+			puts "#{curr_player.name} enter your move"
+			print "from:"
+			from = gets.chomp
+			print "to"
+			to = gets.chomp
+			from = from.split(",")
+			from[0] = from[0].to_i
+			from[1] = from[1].to_i
+			to = to.split(",")
+			to[0] = to[0].to_i
+			to[1] = to[1].to_i
+			move(from,to)
+			@board.display
+
+		end
+		@board.display
+		prints "#{curr_player.name} win"
+	end
+
+	def won(curr_player)
+		curr_board = @board.gird.flatten
+		if curr_player.color == "up"
+			curr_board.each do |n|
+				return true if n.value == "J"
+			end
+		elsif curr_player.color == "down"
+			curr_board.each do |n|
+				return true if n.value == "j"
+			end
+		end
+		return false
 	end
 
 	def move(from,to)
@@ -303,6 +348,6 @@ class Game
 end
 
 
-board = Board.new
+game = Game.new("peter","jojo")
 #board.setup
-board.display
+game.play
