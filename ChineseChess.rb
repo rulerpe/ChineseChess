@@ -90,29 +90,30 @@ class Game
 	end
 
 	def check_che(from,to)
+		fromx,tox = from.dup,to.dup
 		if from[0] == to[0]
 			if from[1]>to[1]
 				from[1],to[1] = to[1], from[1]
 			end
 			if @board.gird[from[0]][from[1]+1] == @board.gird[to[0]][to[1]-1]
-				return eat(from,to) 
+				return eat(fromx,tox) 
 			else
 				@board.gird[from[0]][(from[1]+1)..(to[1]-1)].each do |n|
 					return false if n.value != "-"
 				end
-				return eat(from,to)
+				return eat(fromx,tox)
 			end
 		elsif from[1] == to[1]
 			if from[0]>to[0]
 				from[0],to[0] = to[0], from[0]
 			end
 			if @board.gird[from[0]+1][from[1]] == @board.gird[to[0]-1][to[1]]
-				return eat(from,to) 
+				return eat(fromx,tox) 
 			else
 				@board.gird[(from[0]+1)..(to[0]-1)].each do |n|
 					return false if n[from[1]].value != "-"
 				end
-				return eat(from,to)
+				return eat(fromx,tox)
 			end
 		else
 			return false
@@ -145,7 +146,7 @@ class Game
 	def check_xiang(from,to)
 		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
 			return false if to[1]<5
-		else
+		elsif @board.gird[from[0]][from[1]].value.upcase == @board.gird[from[0]][from[1]].value
 			return false if to[1]>4
 		end
  		case to
@@ -168,7 +169,7 @@ class Game
 		end
 		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
 			return false if to[1]<7
-		else
+		elsif @board.gird[from[0]][from[1]].value.upcase == @board.gird[from[0]][from[1]].value
 			return false if to[1]>2
 		end
 
@@ -185,9 +186,9 @@ class Game
 			return false
 		end
 		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
-			return true if to[1]<7
-		else
-			return true if to[1]>2
+			return false if to[1]<7
+		elsif @board.gird[from[0]][from[1]].value.upcase == @board.gird[from[0]][from[1]].value
+			return false if to[1]>2
 		end
 
 		if (from[0]-to[0]).abs + (from[1]-to[1]).abs == 1
@@ -198,9 +199,81 @@ class Game
 
 	end
 
+	def check_pao(from,to)
+		fromx,tox = from.dup,to.dup
+		if from[0]==to[0]
+			if from[1]>to[1]
+				from[1],to[1] = to[1], from[1]
+			end
+			if to[1] - from[1] == 1
+				@board.gird[tox[0]][tox[1]].value == "-" ? true : false
+			else
+				i = 0
+				@board.gird[from[0]][(from[1]+1)..(to[1]-1)].each do |n|
+					i+=1 if n.value != "-"
+				end
+				if i == 1
+					return pao_eat(fromx,tox)
+				elsif i == 0
+					@board.gird[tox[0]][tox[1]].value == "-" ? true : false
+				else
+					return false
+				end
+			end
+		elsif from[1]==to[1]
+			if from[0]>to[0]
+				from[0],to[0] = to[0], from[0]
+			end
+			if to[0] - from[0] == 1
+				@board.gird[tox[0]][tox[1]].value == "-" ? true : false 
+			else
+				i = 0
+				@board.gird[(from[0]+1)..(to[0]-1)].each do |n|
+					i+=1 if n[from[1]].value != "-"
+				end
+				if i == 1
+					return pao_eat(fromx,tox)
+				elsif i == 0
+					@board.gird[tox[0]][tox[1]].value == "-" ? true : false
+				else
+					return false
+				end
+			end
+		else
+			return false
+		end
+	end
+
+	def check_bing(from,to)
+		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+			return false if from[1]>4 && to[1]-from[1]==1
+		elsif @board.gird[from[0]][from[1]].value.upcase == @board.gird[from[0]][from[1]].value
+			return false if to[1]>2
+		end
+
+	end
+
 	def eat(from,to)
 		if @board.gird[to[0]][to[1]].value == "-"
 			return true
+		elsif @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
+			if @board.gird[to[0]][to[1]].value.downcase == @board.gird[to[0]][to[1]].value
+				return false
+			else
+				return true
+			end
+		else
+			if @board.gird[to[0]][to[1]].value.upcase == @board.gird[to[0]][to[1]].value
+				return false
+			else
+				return true
+			end
+		end
+	end
+
+	def pao_eat(from,to)
+		if @board.gird[to[0]][to[1]].value == "-"
+			return false
 		elsif @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
 			if @board.gird[to[0]][to[1]].value.downcase == @board.gird[to[0]][to[1]].value
 				return false

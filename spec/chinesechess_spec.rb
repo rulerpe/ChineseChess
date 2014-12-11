@@ -102,9 +102,25 @@ describe Game do
 			expect(@test_game.check_jiang([3,2],[2,2])).to eql(false)
 		end
 		it "return false step to far" do
-			expect(@test_game.check_jiang([4,9],[4,7])).to eql(false)
+			expect(@test_game.check_jiang([3,2],[3,3])).to eql(false)
 		end
 
+	end
+
+
+	describe "#check_pao" do
+		it "return ture nothing in between and on the spot" do
+			expect(@test_game.check_pao([1,2],[1,3])).to eql(true)
+		end
+		it "return ture one piece in between and oppent on the spot" do
+			expect(@test_game.check_pao([1,7],[1,0])).to eql(true)
+		end
+		it "return false nothing in between and one piece on the spot" do
+			expect(@test_game.check_pao([7,2],[1,2])).to eql(false)
+		end
+		it "return false one piece in between and nothing on the spot" do
+			expect(@test_game.check_pao([7,7],[0,7])).to eql(false)
+		end
 	end
 
 end
