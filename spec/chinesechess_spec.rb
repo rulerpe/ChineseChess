@@ -123,4 +123,26 @@ describe Game do
 		end
 	end
 
+	describe "#check_bing" do
+		before do
+			@test_game.board.gird[4][2].value = "M"
+			@test_game.board.gird[3][2].value = "b"
+		end
+		it "return ture, one step forward" do
+			expect(@test_game.check_bing([0,3],[0,4])).to eql(true)
+		end
+		it "return false take more then one step" do
+			expect(@test_game.check_bing([0,3],[0,5])).to eql(false)
+		end
+		it "return false move back" do
+			expect(@test_game.check_bing([2,6],[2,7])).to eql(false)
+		end
+		it "return false move side before river" do
+			expect(@test_game.check_bing([2,6],[3,6])).to eql(false)
+		end
+		it "return ture move side and eat after river" do
+			expect(@test_game.check_bing([3,2],[4,2])).to eql(true)
+		end
+	end
+
 end

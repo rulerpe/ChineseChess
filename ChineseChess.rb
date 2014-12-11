@@ -246,11 +246,21 @@ class Game
 
 	def check_bing(from,to)
 		if @board.gird[from[0]][from[1]].value.downcase == @board.gird[from[0]][from[1]].value
-			return false if from[1]>4 && to[1]-from[1]==1
+			return false if to[1]-from[1]==1
+			return false if from[1]>4 && to[0]-from[0]!= 0
 		elsif @board.gird[from[0]][from[1]].value.upcase == @board.gird[from[0]][from[1]].value
-			return false if to[1]>2
+			return false if from[1]-to[1]==1
+			return false if from[1]<5 && to[0]-from[0]!= 0
 		end
 
+		if from[0]-to[0] == 1 || from[0]-to[0] == -1
+			from[1]-to[1] == 0 ? eat(from,to) : false
+		elsif from[1]-to[1] == 1 || from[1]-to[1] == -1
+			from[0]-to[0] == 0 ? eat(from,to) : false
+		else
+			false
+		end
+		 	 
 	end
 
 	def eat(from,to)
